@@ -19,8 +19,9 @@ class UserController {
     const createUserService = new CreateUserService();
 
     try {
-     const user = await createUserService.createUser(name,email,password);
-      return res.status(201).json(user);
+   await createUserService.createUser(name,email,password);
+    
+      return res.status(201).json({});
     } catch (error) {
         console.log(error)
         return res.status(500).json({error:error.message});
