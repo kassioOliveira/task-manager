@@ -11,8 +11,12 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
+app.get("/",(req,res)=>{
+    res.send("Server connected!")
+});
+
 connection().then(()=> {
-    console.log("Connected to databse")
+    console.log("Connected to database")
     app.listen(process.env.PORT, () => {
         console.log(`Connection on port ${process.env.PORT}`);
     });
