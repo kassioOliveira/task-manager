@@ -1,4 +1,4 @@
-const User = require("../models/User.js");
+const User = require("../model/User.js");
 const CreateUserService = require("../services/CreateUserService");
 
 class UserController {
@@ -15,6 +15,7 @@ class UserController {
     if (userExists){
         return res.status(403).json({error:"Este usuário já existe!"});
     }
+
     const createUserService = new CreateUserService();
 
     try {
