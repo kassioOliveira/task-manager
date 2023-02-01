@@ -6,7 +6,7 @@ class UserController {
   async  create(req, res){
     const {name, email, password} = req.body;
 
-    if(!name, !email, !password){
+    if(!name || !email || !password){
        return res.status(406).json({error: "Preencha todos os campos!"});
     }
 
