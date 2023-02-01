@@ -1,4 +1,4 @@
-const User = require("../model/User");
+const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
 class CreateUserService {
@@ -17,8 +17,8 @@ class CreateUserService {
         });
     
         await user.save();
-    
         return user;
+       
     } catch (error) {
         console.log(error);
         return new Error(error.message);

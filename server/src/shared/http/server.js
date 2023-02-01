@@ -6,10 +6,13 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const connection = require("../../config/database/connection");
+const routes = require("../routes");
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
+
+app.use(routes);
 
 app.get("/",(req,res)=>{
     res.send("Server connected!")
