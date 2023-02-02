@@ -1,5 +1,7 @@
 const User = require("../model/User.js");
 const CreateUserService = require("../services/CreateUserService");
+const bcrypt = require("bcrypt");
+const GenerateTokenService = require("../services/GenerateTokenService");
 
 class UserController {
    
@@ -26,6 +28,39 @@ class UserController {
         console.log(error)
         return res.status(500).json({error:error.message});
     }
+  }
+
+  async login(req,res){
+
+    const {password,email} = req.body;
+
+    if(!password || !email){
+      return res.status(406).json({error:"Preencha todos os campos!"});
+    }
+
+   try {
+    const userExists = await User.findOne({email:email});
+
+    if(!userExists){
+        return new Error("Usuário não encontrado!");
+    }
+
+  const validPassword = await bcrypt.compare(password,userExists.password);
+
+  if(!validPassword){
+    return new Error("Senha ou email inválidos!");
+  }
+
+ const generateTokenService = new GenerateTokenService();
+
+ const userResponse = await generateTokenService.generate(userExists._id);
+
+ res.status(202).json({response:userResponse});
+
+   } catch (error) {
+    return res.status(500).json({error:error.message});
+   }
+
   }
 }
 

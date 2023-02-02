@@ -19,7 +19,7 @@ class CreateUserService {
             password: passwordHash,
         });
 
-        const token = await jwt.sign({id:user._id,email:user.email},
+        const token = jwt.sign({id:user._id,email:user.email},
             process.env.JWT_SECRET, {
                 expiresIn:'24h'
             });
