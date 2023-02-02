@@ -42,13 +42,13 @@ class UserController {
     const userExists = await User.findOne({email:email});
 
     if(!userExists){
-        return new Error("Usuário não encontrado!");
+        return res.status(404).json({error:"Usuário não encontrado!"})
     }
 
   const validPassword = await bcrypt.compare(password,userExists.password);
 
   if(!validPassword){
-    return new Error("Senha ou email inválidos!");
+    return res.status(401).json({error:"Senha ou email inválidos!"});
   }
 
  const generateTokenService = new GenerateTokenService();
