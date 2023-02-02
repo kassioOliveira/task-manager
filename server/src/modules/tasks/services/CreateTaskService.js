@@ -3,16 +3,10 @@ const Task = require("../model/Task");
 
 class CreateTaskService {
 
-   async createTask(title,description,user_id,list_id,important) {
+   async createTask(task) {
 
     try {
-        const newTask = await Task.create({
-            title,
-            description,
-            user_id,
-            list_id,
-            important
-        });
+        const newTask = await Task.create(task);
     
         await newTask.save();
     
