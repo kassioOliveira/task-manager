@@ -1,25 +1,24 @@
 const Task = require("../model/Task");
-const moment = require("moment");
+const { startOfDay, endOfDay } = require("date-fns");
 
 
 class ListTaskByDateService {
-
-    //bug
     
-    async listTaskByDate(date){
+    async listTaskByDate(startDate,endDate){
 
-      
+      const startDay = new Date(startDate).toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"});
+      const endDay = new Date(endDate).toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"});
+
         try {
             
-            const task = await Task.find({created_at:{$gte:new Date(2023,2,1),$lte:new Date(2023,2,2)}});
-           console.log(task);
+            const task = await Task.find({'created_at':{$gte:startDay,$lt:endDay}});
+
             return task;
         } catch (error) {
             throw new Error(error.message);
         }
     }
 
-    //final do bug
   
 }
 

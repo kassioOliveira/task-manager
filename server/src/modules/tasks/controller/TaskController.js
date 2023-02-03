@@ -68,30 +68,30 @@ class TaskController {
     }
 
 
-    //bug
-
+  
     async listByDate(req,res){
-        const {date} = req.params;
-        console.log(date)
+        const {start,end} = req.params;
 
-        if(!date){
-            return res.status(400).json({error:" A data é necessária par aessa requisição"})
+        if(!start || !end){
+            return res.status(400).json({error:" A data de início e fim é necessária na requisição"});
         }
 
         const listTaskByDateService = new ListTaskByDateService();
 
         try {
-            const task = await listTaskByDateService.listTaskByDate(date);
+            const task = await listTaskByDateService.listTaskByDate(start,end);
 
             if(!task.length){
                 return res.status(404).json([]);
             }
+
+            return res.status(200).json({response:task});
             
         } catch (error) {
             return res.status({error:error.message});
         }
     }
-    //final do bug
+
 }
 
 module.exports = TaskController;

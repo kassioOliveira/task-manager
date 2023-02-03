@@ -8,6 +8,6 @@ const taskController = new TaskController();
 taskRoutes.post("/",isAuthenticated,taskController.create);
 taskRoutes.get("/",isAuthenticated,taskController.listAll);
 taskRoutes.get("/:id",isAuthenticated,taskController.listById);
-taskRoutes.get("/date/:date",isAuthenticated,taskController.listByDate);
+taskRoutes.get("/date/:start/:end",isAuthenticated,taskController.listByDate);
 
 module.exports = taskRoutes;
