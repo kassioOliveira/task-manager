@@ -23,7 +23,7 @@ class GenerateTokenService {
 
     return userResponse;
     } catch (error) {
-        return new Error({error: error.message});
+        throw new Error({error: error.message});
     }
 
     }

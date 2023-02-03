@@ -34,8 +34,9 @@ const TaskSchema = new Schema({
         type:Date,
         default: Date.now()
     }
+}
 
-});
+);
 
 const Task = mongoose.model("Task",TaskSchema);
 

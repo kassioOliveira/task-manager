@@ -1,4 +1,7 @@
 const CreateTaskService = require("../services/CreateTaskService");
+const ListTaskService = require("../services/ListTaskService");
+const LisTaskByIdService = require("../services/ListTaskByIdService");
+const ListTaskByDateService = require("../services/ListTaskByDateService");
 
 class TaskController {
 
@@ -22,6 +25,73 @@ class TaskController {
         }
 
     }
+
+    async listAll(req,res){
+        const { id } = req.user;
+
+        const listTaskService = new ListTaskService()
+
+        try {
+            const tasks = await listTaskService.listTask(id);
+
+            if(!tasks.length){
+                return res.status(404).json([]);
+            }
+
+            return res.status(200).json({response:tasks});
+        } catch (error) {
+            return res.status(500).json({error:error.message});
+        }
+    }
+
+    async listById (req,res){
+
+        const {id} = req.params;
+
+        if(!id){
+            return res.status(400).json({error:"Id da task inválido!"});
+        }
+
+        const listTaskByIdService = new LisTaskByIdService();
+        try {
+            const task = await listTaskByIdService.listById(id);
+
+            if(!task){
+                return res.status(404).json({});
+            }
+
+            return res.status(200).json({response:task});
+        } catch (error) {
+            return res.status(500).json({error:error.message});
+        }
+
+    }
+
+
+    //bug
+
+    async listByDate(req,res){
+        const {date} = req.params;
+        console.log(date)
+
+        if(!date){
+            return res.status(400).json({error:" A data é necessária par aessa requisição"})
+        }
+
+        const listTaskByDateService = new ListTaskByDateService();
+
+        try {
+            const task = await listTaskByDateService.listTaskByDate(date);
+
+            if(!task.length){
+                return res.status(404).json([]);
+            }
+            
+        } catch (error) {
+            return res.status({error:error.message});
+        }
+    }
+    //final do bug
 }
 
 module.exports = TaskController;

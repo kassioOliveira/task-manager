@@ -12,7 +12,7 @@ class CreateTaskService {
     
         return newTask;
     } catch (error) {
-        return new Error(error.message);
+        throw new Error(error.message);
     }
    }
 }
