@@ -2,6 +2,8 @@ const CreateTaskService = require("../services/CreateTaskService");
 const ListTaskService = require("../services/ListTaskService");
 const LisTaskByIdService = require("../services/ListTaskByIdService");
 const ListTaskByDateService = require("../services/ListTaskByDateService");
+const ListTaskByImportant = require("../services/ListTaskByImportantService");
+const ListTaskMyDayService = require("../services/ListTaskMyDayService");
 
 class TaskController {
 
@@ -95,6 +97,36 @@ class TaskController {
             
         } catch (error) {
             return res.status({error:error.message});
+        }
+    }
+
+    async listByImportant(req,res){
+
+        const listTaskByImportant = new ListTaskByImportant();
+        try {
+            const tasks = await listTaskByImportant.importantTask();
+            if(!tasks.length){
+                return res.status(404).json([]);
+            }
+            return res.status(200).json({response:tasks});
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({error:error.message});
+        }
+    }
+
+    async listMyDay(req,res){
+        const listTaskMyDayService = new ListTaskMyDayService();
+
+        try {
+            const tasks = await listTaskMyDayService.listTaskMyDay();
+            if(!tasks.length){
+                return res.status(404).json([]);
+            }
+
+            return res.status(200).json({response:tasks});
+        } catch (error) {
+            return res.status(500).json({error:error});
         }
     }
 

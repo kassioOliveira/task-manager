@@ -7,6 +7,6 @@ const routes = express.Router();
 
 routes.use("/users",UserRouter);
 routes.use("/user",userAuthRoutes);
-routes.use("/task",taskRoutes);
+routes.use("/tasks",taskRoutes);
 
 module.exports = routes;
