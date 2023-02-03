@@ -72,6 +72,12 @@ class TaskController {
     async listByDate(req,res){
         const {start,end} = req.params;
 
+        const regex = /^\d{4}\-([1-9]|1[012])\-([1-9]|[12][0-9]|3[01])$/;
+
+        if( !start.match(regex) || !end.match(regex)){
+            return res.status(400).json({error:"A data de início e fim deve estar no formato, aaaa-m-d"});
+        }
+
         if(!start || !end){
             return res.status(400).json({error:" A data de início e fim é necessária na requisição"});
         }
