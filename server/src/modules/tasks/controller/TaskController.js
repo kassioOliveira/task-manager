@@ -5,6 +5,8 @@ const ListTaskByDateService = require("../services/ListTaskByDateService");
 const ListTaskByImportant = require("../services/ListTaskByImportantService");
 const ListTaskMyDayService = require("../services/ListTaskMyDayService");
 const UpdateTaskService = require("../services/UpdateTaskService");
+const ListTaskCompletedService = require("../services/ListTaskCompletedService");
+
 const Task = require("../model/Task");
 
 class TaskController {
@@ -139,6 +141,22 @@ class TaskController {
         }
     }
 
+    async listCompleted(req,res){
+        const user = req.user;
+
+        const listTaskCompleted = new ListTaskCompletedService()
+        try {
+            const tasks = await listTaskCompleted.listTaskCompleted(user);
+
+            if(!tasks.length){
+                return res.status(404).json([]);
+            }
+            return res.status(200).json({response:tasks});
+        } catch (error) {
+            return res.status(500).json({error:error.message});
+        }
+    }
+
     async update(req,res){
         const user = req.user;
         const {id} = req.params;
@@ -168,6 +186,7 @@ class TaskController {
             return res.status(500).json({error:error.message});
         }
     }
+
 
 }
 
