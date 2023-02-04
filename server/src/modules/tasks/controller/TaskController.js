@@ -51,6 +51,7 @@ class TaskController {
     async listById (req,res){
 
         const {id} = req.params;
+        const user = req.user;
 
         if(!id){
             return res.status(400).json({error:"Id da task inválido!"});
@@ -58,7 +59,7 @@ class TaskController {
 
         const listTaskByIdService = new LisTaskByIdService();
         try {
-            const task = await listTaskByIdService.listById(id);
+            const task = await listTaskByIdService.listById(id,user);
 
             if(!task){
                 return res.status(404).json({});
@@ -75,6 +76,7 @@ class TaskController {
   
     async listByDate(req,res){
         const {start,end} = req.params;
+        const user = req.user;
 
         const regex = /^\d{4}\-([1-9]|1[012])\-([1-9]|[12][0-9]|3[01])$/;
 
@@ -89,7 +91,7 @@ class TaskController {
         const listTaskByDateService = new ListTaskByDateService();
 
         try {
-            const task = await listTaskByDateService.listTaskByDate(start,end);
+            const task = await listTaskByDateService.listTaskByDate(start,end,user);
 
             if(!task.length){
                 return res.status(404).json([]);
@@ -104,9 +106,11 @@ class TaskController {
 
     async listByImportant(req,res){
 
+        const {id} = req.user;
+
         const listTaskByImportant = new ListTaskByImportant();
         try {
-            const tasks = await listTaskByImportant.importantTask();
+            const tasks = await listTaskByImportant.importantTask(id);
             if(!tasks.length){
                 return res.status(404).json([]);
             }
@@ -118,10 +122,13 @@ class TaskController {
     }
 
     async listMyDay(req,res){
+
+        const {id} = req.user;
+
         const listTaskMyDayService = new ListTaskMyDayService();
 
         try {
-            const tasks = await listTaskMyDayService.listTaskMyDay();
+            const tasks = await listTaskMyDayService.listTaskMyDay(id);
             if(!tasks.length){
                 return res.status(404).json([]);
             }
@@ -154,7 +161,7 @@ class TaskController {
                 return res.status(404).json({error:"Essa Task não existe!"});
             }
 
-            const task = await updateTaskService.updateTask(id,user,data);
+            await updateTaskService.updateTask(id,user,data);
 
             return res.status(200).json({response:"Task atualizada!"});
         } catch (error) {

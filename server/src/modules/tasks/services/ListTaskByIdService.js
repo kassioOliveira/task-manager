@@ -2,10 +2,10 @@ const Task = require("../model/Task");
 
 class LisTaskByIdService {
 
-  async  listById(id) {
+  async  listById(id,user) {
 
     try {
-       const task = await Task.findOne({_id:id});
+       const task = await Task.findOne({user_id:user.id,_id:id});
        
        return task;
     } catch (error) {

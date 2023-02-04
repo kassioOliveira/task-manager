@@ -2,10 +2,10 @@ const Task = require("../model/Task");
 
 class ListTaskByImportant {
 
-    async importantTask(){
+    async importantTask(id){
 
         try {
-            const tasks = await Task.find({important:true});
+            const tasks = await Task.find({user_id:id,important:true});
 
              return tasks;
         } catch (error) {
