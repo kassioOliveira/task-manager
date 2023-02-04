@@ -4,6 +4,8 @@ const LisTaskByIdService = require("../services/ListTaskByIdService");
 const ListTaskByDateService = require("../services/ListTaskByDateService");
 const ListTaskByImportant = require("../services/ListTaskByImportantService");
 const ListTaskMyDayService = require("../services/ListTaskMyDayService");
+const UpdateTaskService = require("../services/UpdateTaskService");
+const Task = require("../model/Task");
 
 class TaskController {
 
@@ -127,6 +129,36 @@ class TaskController {
             return res.status(200).json({response:tasks});
         } catch (error) {
             return res.status(500).json({error:error});
+        }
+    }
+
+    async update(req,res){
+        const user = req.user;
+        const {id} = req.params;
+        const data = req.body;
+        const updateTaskService = new UpdateTaskService();
+
+        if(!id){
+            return res.status(400).json({error:"Id necessário para essa requisição!"});
+        }
+
+        if(!data){
+            return res.status(400).json({error:"Você não declarou nenhum campo para ser atualizado!"});
+        }
+
+        try {
+
+            const taskExists = await Task.findOne({_id:id});
+
+            if(!taskExists){
+                return res.status(404).json({error:"Essa Task não existe!"});
+            }
+
+            const task = await updateTaskService.updateTask(id,user,data);
+
+            return res.status(200).json({response:"Task atualizada!"});
+        } catch (error) {
+            return res.status(500).json({error:error.message});
         }
     }
 
