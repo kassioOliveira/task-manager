@@ -11,6 +11,7 @@ const DeleteManyTaskService = require("../services/DeleteManyTaskService");
 const mongoose = require("mongoose")
 
 const Task = require("../model/Task");
+const DeleteTaskService = require("../services/DeleteTaskService");
 
 class TaskController {
 
@@ -214,7 +215,7 @@ class TaskController {
             if(validIds.includes(el)){
                 return {id:el,deleted:true};
             }else{
-              return {id:el,deleted:false,error:"Id inválido!"};
+              return {id:el,deleted:false,error:"Id inválido!"};i
             }
           });
            
@@ -223,6 +224,28 @@ class TaskController {
             return res.status(500).json({error:error.message});
         }
 
+    }
+
+    async delete(req,res){
+        const user = req.user;
+        const {id} = req.params;
+
+        const deleteTaskService = new DeleteTaskService();
+
+        try {
+            const taskToDelete = await Task.findOne({user_id:user.id,_id:id});
+
+            if(!taskToDelete){
+                return res.status(404).json({error:" A Task não pode ser deletada, pois ela não existe!"});
+            }
+
+           await deleteTaskService.DeleteTask(taskToDelete._id.toString(),user);
+
+            return res.status(200).json({response:{id:taskToDelete._id.toString(),deleted:true}});
+
+        } catch (error) {
+            return res.status(500).json({error:error.message});
+        }
     }
 
 
