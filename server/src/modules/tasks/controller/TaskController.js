@@ -6,6 +6,9 @@ const ListTaskByImportant = require("../services/ListTaskByImportantService");
 const ListTaskMyDayService = require("../services/ListTaskMyDayService");
 const UpdateTaskService = require("../services/UpdateTaskService");
 const ListTaskCompletedService = require("../services/ListTaskCompletedService");
+const DeleteManyTaskService = require("../services/DeleteManyTaskService");
+
+const mongoose = require("mongoose")
 
 const Task = require("../model/Task");
 
@@ -185,6 +188,41 @@ class TaskController {
         } catch (error) {
             return res.status(500).json({error:error.message});
         }
+    }
+
+    async deleteMany(req,res) {
+        const {tasks_id} = req.body;
+        const user = req.user;
+
+        const deleteManyTaskService = new DeleteManyTaskService();
+
+        try {
+       
+           const allTasks = await Task.find({user_id:user.id ,_id:{$in:tasks_id}});
+
+           const validIds = allTasks.map((el)=>{
+            return el._id.toString();
+           }); 
+
+           if(!validIds.length){
+            return res.status(404).json({error:"As Tasks não podem ser deletadas, pois elas não existem"});
+           }
+
+          await deleteManyTaskService.deleteManyTask(validIds,user);
+
+           const deletedWithSuccess = tasks_id.map((el)=>{
+            if(validIds.includes(el)){
+                return {id:el,deleted:true};
+            }else{
+              return {id:el,deleted:false,error:"Id inválido!"};
+            }
+          });
+           
+            return res.status(200).json({response:deletedWithSuccess});
+        } catch (error) {
+            return res.status(500).json({error:error.message});
+        }
+
     }
 
 

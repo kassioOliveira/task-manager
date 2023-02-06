@@ -13,5 +13,6 @@ taskRoutes.get("/important",isAuthenticated,taskController.listByImportant);
 taskRoutes.get("/myday",isAuthenticated,taskController.listMyDay);
 taskRoutes.get("/completed",isAuthenticated,taskController.listCompleted);
 taskRoutes.put("/task/:id",isAuthenticated,taskController.update);
+taskRoutes.delete("/",isAuthenticated,taskController.deleteMany);
 
 module.exports = taskRoutes;
