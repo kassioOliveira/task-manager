@@ -2,13 +2,14 @@ const List = require("../model/List");
 
 class CreateListService{
 
-    async createList(list){
+    async createList(listCreate){
 
         try {
-            const list = await List.create(list);
+            const list = await List.create(listCreate);
 
             return list;
         } catch (error) {
+            console.log(error)
             throw new Error(error.message);
         }
     }
