@@ -6,6 +6,8 @@ const listRoute = express.Router();
 const listController = new ListController()
 
 listRoute.post("/",isAuthenticated, listController.create);
+listRoute.get("/",isAuthenticated,listController.show);
+listRoute.put("/",isAuthenticated,listController.addTask);
 
 
 module.exports = listRoute;

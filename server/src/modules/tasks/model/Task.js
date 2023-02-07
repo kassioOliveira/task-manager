@@ -23,8 +23,8 @@ const TaskSchema = new Schema({
         required:true
     },
     list_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        default:null
+        type:String,
+        default:""
     },
     my_day:{
         type:Boolean,
