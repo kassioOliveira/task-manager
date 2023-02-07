@@ -22,9 +22,12 @@ const UserSchema = new Schema({
     img:{
         type:String,
         default:""
+    },
+    created_at:{
+        type:Date,
+        default: Date.now()
     }
-},
-{timestamps:true});
+});
 
 const User = mongoose.model("User",UserSchema);
 
