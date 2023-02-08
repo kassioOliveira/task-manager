@@ -4,6 +4,7 @@ const AddManyTaskToListService = require("../service/AddManyTaskToListService");
 const AddTaskToListService = require("../service/AddTaskToListService");
 const CreateListService = require("../service/CreateListService");
 const ListOfListService = require("../service/ListOfListService");
+const ListTaskOfListService = require("../service/ListTaskOfListService");
 
 class ListController {
 
@@ -40,11 +41,7 @@ class ListController {
     try {
         const lists = await listOfListService.showLists(user)
 
-        if(!lists.length){
-            return res.status(404).json([]);
-        }
-
-        return res.status(200).json(lists);
+        return res.status(200).json({response:lists});
     } catch (error) {
         res.status(500).json({error:error.message});
     }
@@ -54,8 +51,6 @@ class ListController {
 
     const user = req.user;
     const {task_id,list_id} = req.body;
-
-    let value = mongoose.isObjectIdOrHexString(list_id)
 
     if(!task_id){
         return res.status(400).json({error:"Id da Task necessário!"});
@@ -91,7 +86,7 @@ class ListController {
         return res.status(400).json({error:"Campo ids inválido!"});
     }
 
-    const addManyTaskToListService = new AddManyTaskToListService()
+    const addManyTaskToListService = new AddManyTaskToListService();
 
     try {
         const allTasks = await Task.find({user_id:user.id ,_id:{$in:tasks_ids}});
@@ -117,6 +112,23 @@ class ListController {
           return res.status(200).json({response:addWithSuccess});
     } catch (error) {
         res.status(500).json({error:error.message});
+    }
+   }
+
+   async taskOfList(req,res){
+
+    const user = req.user;
+    const {list_id} = req.params;
+
+    const listTaskOfListService = new ListTaskOfListService();
+
+    try {
+        const tasks = await listTaskOfListService.taskOfList(list_id,user);
+
+        return res.status(200).json({response:tasks})
+
+    } catch (error) {
+        return res.status(500).json({error:error.message});
     }
    }
 }

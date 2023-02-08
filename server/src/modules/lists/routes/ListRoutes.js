@@ -7,6 +7,7 @@ const listController = new ListController()
 
 listRoute.post("/",isAuthenticated, listController.create);
 listRoute.get("/",isAuthenticated,listController.show);
+listRoute.get("/tasks/:list_id",isAuthenticated,listController.taskOfList);
 listRoute.put("/",isAuthenticated,listController.addTask);
 listRoute.put("/:list_id",isAuthenticated,listController.addManyTasksToList);
 
