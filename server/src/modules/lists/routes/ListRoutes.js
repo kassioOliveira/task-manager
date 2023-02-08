@@ -8,6 +8,7 @@ const listController = new ListController()
 listRoute.post("/",isAuthenticated, listController.create);
 listRoute.get("/",isAuthenticated,listController.show);
 listRoute.put("/",isAuthenticated,listController.addTask);
+listRoute.put("/:list_id",isAuthenticated,listController.addManyTasksToList);
 
 
 module.exports = listRoute;
