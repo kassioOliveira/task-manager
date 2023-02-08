@@ -5,6 +5,7 @@ const AddTaskToListService = require("../service/AddTaskToListService");
 const CreateListService = require("../service/CreateListService");
 const ListOfListService = require("../service/ListOfListService");
 const ListTaskOfListService = require("../service/ListTaskOfListService");
+const RemoveManyTaskFromListService = require("../service/RemoveManyTaskFromListService");
 
 class ListController {
 
@@ -127,6 +128,46 @@ class ListController {
 
         return res.status(200).json({response:tasks})
 
+    } catch (error) {
+        return res.status(500).json({error:error.message});
+    }
+   }
+
+   async removeManyTaskFromList(req,res){
+
+    const {list_id} = req.params;
+    const user = req.user;
+    const {tasks_ids} = req.body;
+
+    if(!tasks_ids.length){
+        return res.status(400).json({error:"Campo ids inválido!"});
+    }
+
+    const removeManyTaskFromListService = new RemoveManyTaskFromListService();
+
+    try {
+
+        const allTasks = await Task.find({user_id:user.id ,_id:{$in:tasks_ids}});
+
+        const validIds = allTasks.map((el)=>{
+         return el._id.toString();
+        }); 
+
+        if(!validIds.length){
+         return res.status(404).json({error:"As Tasks não podem ser removidas, pois elas não existem"});
+        }
+
+     await removeManyTaskFromListService.removeTaskFromList(tasks_ids,user,list_id);
+
+     const removedWithSuccess = tasks_ids.map((el)=>{
+         if(validIds.includes(el)){
+             return {id:el,removed:true};
+         }else{
+           return {id:el,removed:false,error:"Id inválido!"};
+         }
+       });
+
+        return res.status(200).json({response:removedWithSuccess});
     } catch (error) {
         return res.status(500).json({error:error.message});
     }
