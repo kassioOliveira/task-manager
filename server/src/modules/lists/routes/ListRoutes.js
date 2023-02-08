@@ -11,6 +11,7 @@ listRoute.get("/tasks/:list_id",isAuthenticated,listController.taskOfList);
 listRoute.put("/",isAuthenticated,listController.addTask);
 listRoute.put("/:list_id",isAuthenticated,listController.addManyTasksToList);
 listRoute.put("/tasks/:list_id",isAuthenticated,listController.removeManyTaskFromList);
+listRoute.put("/task/:list_id/:task_id",isAuthenticated,listController.removeOneTaskFromList);
 
 
 module.exports = listRoute;

@@ -6,6 +6,7 @@ const CreateListService = require("../service/CreateListService");
 const ListOfListService = require("../service/ListOfListService");
 const ListTaskOfListService = require("../service/ListTaskOfListService");
 const RemoveManyTaskFromListService = require("../service/RemoveManyTaskFromListService");
+const RemoveTaskFromListService = require("../service/RemoveTaskFromListService");
 
 class ListController {
 
@@ -147,14 +148,14 @@ class ListController {
 
     try {
 
-        const allTasks = await Task.find({user_id:user.id ,_id:{$in:tasks_ids}});
+        const allTasks = await Task.find({user_id:user.id,list_id:list_id,_id:{$in:tasks_ids}});
 
         const validIds = allTasks.map((el)=>{
          return el._id.toString();
         }); 
 
         if(!validIds.length){
-         return res.status(404).json({error:"As Tasks não podem ser removidas, pois elas não existem"});
+         return res.status(404).json({error:"As Tasks não podem ser removidas, pois elas não existem na lista!"});
         }
 
      await removeManyTaskFromListService.removeTaskFromList(tasks_ids,user,list_id);
@@ -168,6 +169,33 @@ class ListController {
        });
 
         return res.status(200).json({response:removedWithSuccess});
+    } catch (error) {
+        return res.status(500).json({error:error.message});
+    }
+   }
+
+   async removeOneTaskFromList(req,res){
+
+    const user = req.user;
+    const {list_id,task_id} = req.params;
+
+    if(!list_id || !task_id){
+        return res.status(401).json({error:"Os parâmentros lis_id e task_id são requeridos nessa requisição!"})
+    }
+
+    const removeTaskFromListService = new RemoveTaskFromListService();
+
+    try {
+
+        const taskExists = await Task.findOne({user_id:user.id,_id:task_id,list_id:list_id});
+
+        if(!taskExists){
+            return res.status(404).json({error:"Essa task não pode ser removida, pois ela não existe na lista!"})
+        }
+
+        const task = await removeTaskFromListService.removeOne(task_id,user,list_id);
+
+        return res.status(200).json({response:{id:taskExists._id,removed:true}});
     } catch (error) {
         return res.status(500).json({error:error.message});
     }
