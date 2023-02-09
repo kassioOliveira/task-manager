@@ -19,10 +19,6 @@ const UserSchema = new Schema({
         type: String,
         default:""
     },
-    img:{
-        type:String,
-        default:""
-    },
     created_at:{
         type:Date,
         default: Date.now()

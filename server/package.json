@@ -8,7 +8,5 @@
     "start": "nodemon ./src/shared/http/server.js"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-  }
+  "license": "ISC"
 }
