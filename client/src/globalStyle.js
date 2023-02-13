@@ -11,6 +11,12 @@ const GlobalStyled = createGlobalStyle`
 }
 `;
 
+export const ContainerLayout = styled.div`
+ width: 100%;
+ height: 100vh;
+ display: flex;
+`
+
  export const Input = styled.input`
  border: 1px solid gray;
  width: 79%;
@@ -22,9 +28,10 @@ const GlobalStyled = createGlobalStyle`
          outline:0;
          
     }
- 
- 
  `;
 
+export const TitleStyle = styled.h1`
+font-size:1.5rem;
+`
 
 export default GlobalStyled;

@@ -1,17 +1,24 @@
-import React, { useContext } from 'react'
-import SideBar from '../SideBar/SideBar'
- 
-import { Context } from '../../Hooks/ContextSideBar'
+import React, {  } from 'react'
+import InputSearch from '../InputSearch/InputSearch'
 
-import { HeaderCompenentStyle } from './HeaderStyle'
+
+import { HeaderCompenentStyle, NavContainerStyled , NavLink, Nav } from './HeaderStyle'
 
 export default function Header() {
-
-  const {openSide} = useContext(Context)
-
+  
   return (
-    <HeaderCompenentStyle ref={openSide} >
-       <SideBar/>
+    <HeaderCompenentStyle>
+       <Nav>
+        <InputSearch/>
+       < NavContainerStyled >
+        <NavLink to={'/dia'}>Meu Dia</NavLink>
+<NavLink to={'/ola'}>Importante</NavLink>
+<NavLink to={'/todas'}>Todas</NavLink>
+<NavLink to={'/completas'}>Completas</NavLink>
+<NavLink to={'/tarefas'}>Tarefas</NavLink>
+<NavLink to={'/listas'}>Listas</NavLink>
+        </ NavContainerStyled >
+       </Nav>
     </HeaderCompenentStyle>
   )
 }

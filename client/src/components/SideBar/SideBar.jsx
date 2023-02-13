@@ -1,19 +1,26 @@
-import React from "react";
-import { Nav, NavLink, UlStyled } from "./SideBarStyle";
+import React, { useContext,} from "react";
+import { Container, Nav, NavLink, NavContainerStyled,IconCLose } from "./SideBarStyle";
 import InputSearch from "../InputSearch/InputSearch";
 
+import { Context } from "../../Hooks/ContextSideBar";
+
 export default function SideBar() {
+
+  const {menuVisible,setMenuVisible} = useContext(Context);
   return (
-    <Nav>
+   <Container isVisible={menuVisible} >
+<IconCLose onClick={()=> setMenuVisible((res)=> res === true? (false):(true))}/>
+     <Nav>
       <InputSearch/>
-        <UlStyled>
+        <NavContainerStyled>
         <NavLink to={'/dia'}>Meu Dia</NavLink>
 <NavLink to={'/ola'}>Importante</NavLink>
 <NavLink to={'/todas'}>Todas</NavLink>
 <NavLink to={'/completas'}>Completas</NavLink>
 <NavLink to={'/tarefas'}>Tarefas</NavLink>
 <NavLink to={'/listas'}>Listas</NavLink>
-        </UlStyled>
+        </NavContainerStyled>
     </Nav>
+   </Container>
   )
 }
