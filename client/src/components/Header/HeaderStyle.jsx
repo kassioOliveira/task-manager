@@ -2,12 +2,12 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const HeaderCompenentStyle = styled.header`
- border:1px solid gray;
+
  width: 30%;
  height:100%;
-
- background-color: #eeeeee;
-
+ background-color: #e1e1e1;
+ background-color: #8a81d26a;
+ box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
  @media screen and (max-width: 650px) {
         display: none;
     }
@@ -36,14 +36,15 @@ export const NavLink = styled(Link)`
     text-decoration:none;
     width: 80%;
     height: 35px;
-    border: 1px solid black;
+    font-size:1.2rem;
     border-radius:5px;
-  text-decoration:none;
-  color: black;
-  font-weight:bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    text-decoration:none;
+    font-weight:bold;
+    display: flex;
+    gap:10px;
+    align-items: center;
+    color: #ffff; 
+  
 `
 
 

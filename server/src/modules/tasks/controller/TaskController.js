@@ -44,10 +44,6 @@ class TaskController {
         try {
             const tasks = await listTaskService.listTask(id);
 
-            if(!tasks.length){
-                return res.status(404).json([]);
-            }
-
             return res.status(200).json({response:tasks});
         } catch (error) {
             return res.status(500).json({error:error.message});
@@ -99,10 +95,6 @@ class TaskController {
         try {
             const task = await listTaskByDateService.listTaskByDate(start,end,user);
 
-            if(!task.length){
-                return res.status(404).json([]);
-            }
-
             return res.status(200).json({response:task});
             
         } catch (error) {
@@ -117,9 +109,7 @@ class TaskController {
         const listTaskByImportant = new ListTaskByImportant();
         try {
             const tasks = await listTaskByImportant.importantTask(id);
-            if(!tasks.length){
-                return res.status(404).json([]);
-            }
+
             return res.status(200).json({response:tasks});
         } catch (error) {
             console.log(error)
@@ -135,10 +125,7 @@ class TaskController {
 
         try {
             const tasks = await listTaskMyDayService.listTaskMyDay(id);
-            if(!tasks.length){
-                return res.status(404).json([]);
-            }
-
+    
             return res.status(200).json({response:tasks});
         } catch (error) {
             return res.status(500).json({error:error});
@@ -152,9 +139,6 @@ class TaskController {
         try {
             const tasks = await listTaskCompleted.listTaskCompleted(user);
 
-            if(!tasks.length){
-                return res.status(404).json([]);
-            }
             return res.status(200).json({response:tasks});
         } catch (error) {
             return res.status(500).json({error:error.message});

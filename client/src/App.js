@@ -1,23 +1,26 @@
 import React from "react";
-import {BrowserRouter,Routes,Route} from "react-router-dom";
-import {ContainerLayout} from "./globalStyle";
-import Header from "./components/Header/Header";
+import {Routes,Route} from "react-router-dom";
+
+import PriveteRouteAuth from "./routes/PriveteRouteAuth";
 import SideBar from "./components/SideBar/SideBar";
 import Home from "./pages/Home/Home";
+import SignUp from "./pages/SignUp/SignUp";
+import Login from "./pages/Login/Login";
+
+
 
 function App() {
+  
   return (
-
-      <ContainerLayout>
-        <BrowserRouter>
-    <SideBar/>
-     <Header/>
+<>
+     <SideBar/>
      <Routes>
-     <Route path="/" element={<Home/>} />
-     <Route path="/:ola" element={<h1>ola</h1>} />
+     <Route path="/" element={<PriveteRouteAuth><Home/></PriveteRouteAuth>}  />
+     <Route path="/signup" element={<SignUp/>} />
+     <Route path="/login" element={<Login/>} />
      </Routes>
-    </BrowserRouter>
-      </ContainerLayout>
+</>
+
   );
 }
 

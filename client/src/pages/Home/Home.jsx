@@ -1,8 +1,15 @@
 import React from 'react'
-import Main from '../../components/Main/Main'
-import InputAdd from '../../components/InputAdd/InputAdd'
-export default function Home() {
+import Main from '../../components/Main/Main';
+import Header from '../../components/Header/Header';
+export default function Home({location}) {
+
   return (
-    <Main inputAdd={InputAdd}/>
+
+    <>
+    <Header/>
+    <Main>
+
+    </Main>
+    </>
   )
 }
