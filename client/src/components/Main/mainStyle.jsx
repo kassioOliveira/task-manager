@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {FaBars} from 'react-icons/fa'
-import {BsHouseDoor,BsTrash} from 'react-icons/bs'
+import {BsHouseDoor,BsTrash,BsThreeDotsVertical} from 'react-icons/bs'
 
 
 export const MainComponentStyle = styled.main`
@@ -18,7 +18,7 @@ export const MainComponentStyle = styled.main`
         gap: 15px;
     }
 
-    @media screen and (max-width: 550px) {
+    @media screen and (max-width: 650px) {
         justify-content: center;
     }
    
@@ -92,24 +92,71 @@ export const TitleContainer = styled.div`
    border: 1px solid red;
    width: 100%;
    height: 10%;
-  
+  justify-content: space-around;
+  align-items: center;
    @media screen and (min-width: 760px) {
-    justify-content: center;
+    justify-content: space-around;
    align-items: center;
     }
 `
 export const IconTitle = styled(BsHouseDoor)`
+    font-size:30px;
+`
+export const TitleSubContainer = styled.div`
+    border: 1px solid green;
+    height: 100%;
+    width: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`
+
+export const DropDownContainer = styled.div`
+    border: 1px solid greenyellow;
+    width: 200px;
+    height: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    position: relative;
+`
+export const DropDownSubContainer = styled.div`
+    border: 1px solid blue;
+    transition:5s ease-in-out;
+    width: 100%;
+    height: 500%;
+    position: absolute;
+    top:100%;
+    z-index: 100;
+    overflow: hidden;
+`
+export const DropDownListContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    border: 1px solid yellow;
+    position: absolute;
+    overflow: hidden;
+`
+export const DropDownListItemContainer = styled.div`
+    width: 100%;
+    height: 30px;
+    background-color:red;
+`
+export const ThreeDots = styled(BsThreeDotsVertical)`
+    cursor: pointer;
     font-size:20px;
+    margin-left:0;
 `
 
 export const H1 = styled.h1`
     color:#ffff;
 `
 export const CheckboxInput = styled.input`
-    
+    display: none;
 `
 export const TaskName = styled.h2`
     color: #ffff;
+    cursor: pointer;
 `
 
 export const IconBar = styled(FaBars)`

@@ -2,9 +2,9 @@ import React from 'react'
 
 import { ButtonAddStyle} from '../ButtonAdd/ButtonAddStyle'
 
-export default function ButtonAdd({style,color,children}) {
+export default function ButtonAdd({children,handleCreateTask}) {
   return (
-    <ButtonAddStyle style={style} color={`${color}`}>
+    <ButtonAddStyle onClick={handleCreateTask}>
         {children}
     </ButtonAddStyle>
   )

@@ -1,9 +1,11 @@
 import React, { createContext, useEffect, useState} from "react";
 import { api } from "../services/api";
 
+
 export const Context = createContext(null);
 
 const ContextProvider = ({ children }) => {
+
 
     const [menuVisible,setMenuVisible] = useState(false);
     const [user,setUser] = useState(null);
@@ -41,6 +43,8 @@ const ContextProvider = ({ children }) => {
      throw new  Error(error.response.data.error);
        }
     }
+
+  
 
     return (
         <Context.Provider value={{

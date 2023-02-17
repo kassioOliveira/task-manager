@@ -18,7 +18,7 @@ const jwt = require("jsonwebtoken");
         next();
         
     } catch (error) {
-        return res.status(400).json({error:"JWT token inválido!"})
+        return res.status(401).json({error:"JWT token inválido!"})
     }
 
   }
