@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {FaBars} from 'react-icons/fa'
-import {BsHouseDoor,BsTrash,BsThreeDotsVertical} from 'react-icons/bs'
+import {BsHouseDoor,BsTrash,BsCheckAll} from 'react-icons/bs'
 
 
 export const MainComponentStyle = styled.main`
@@ -113,39 +113,20 @@ export const TitleSubContainer = styled.div`
 
 export const DropDownContainer = styled.div`
     border: 1px solid greenyellow;
-    width: 200px;
+    width: 150px;
     height: 100%;
     display: flex;
     justify-content: end;
     align-items: center;
     position: relative;
 `
-export const DropDownSubContainer = styled.div`
-    border: 1px solid blue;
-    transition:5s ease-in-out;
-    width: 100%;
-    height: 500%;
-    position: absolute;
-    top:100%;
-    z-index: 100;
-    overflow: hidden;
-`
-export const DropDownListContainer = styled.div`
-    width: 100%;
-    height: 100%;
-    border: 1px solid yellow;
-    position: absolute;
-    overflow: hidden;
-`
-export const DropDownListItemContainer = styled.div`
-    width: 100%;
-    height: 30px;
-    background-color:red;
-`
-export const ThreeDots = styled(BsThreeDotsVertical)`
-    cursor: pointer;
-    font-size:20px;
-    margin-left:0;
+export const ContainerButtons = styled.div `
+width: 200px;
+height: 100%;
+display: flex;
+justify-content: space-around;
+align-items: center;
+position: relative;
 `
 
 export const H1 = styled.h1`
@@ -153,10 +134,43 @@ export const H1 = styled.h1`
 `
 export const CheckboxInput = styled.input`
     display: none;
+
+    ${({isVisible}) => isVisible && (css`
+    display: initial;
+    `)}
 `
 export const TaskName = styled.h2`
     color: #ffff;
     cursor: pointer;
+`
+export const CheckedAllIcon = styled(BsCheckAll)`
+    font-size: 20px;
+`
+export const ButtonIncon = styled.button`
+cursor: pointer;
+border: none;
+border-radius:5px;
+position: absolute;
+right: 10px;
+${({selected}) => selected && (css`
+background-color: #1fe71f;
+
+`)}
+
+    
+`
+export const ButtonInconDelete = styled(ButtonIncon)`
+background-color: red;
+color: #ffff;
+padding: 5px;
+display: none;
+right: initial;
+left: 10px;
+${({selected}) => selected && (css`
+display: initial;
+
+`)}
+    
 `
 
 export const IconBar = styled(FaBars)`

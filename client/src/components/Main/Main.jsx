@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { ArticleContainer, CheckboxInput, DropDownContainer, DropDownListContainer, DropDownListItemContainer, DropDownSubContainer, H1, IconBar, IconTitle, IconTrash, MainComponentStyle, SectionContainer, TaskContainer, TaskName, ThreeDots, TitleContainer, TitleSubContainer } from './mainStyle';
+import { ArticleContainer, ButtonIncon, ButtonInconDelete, CheckboxInput, CheckedAllIcon, ContainerButtons, H1, IconBar, IconTitle, IconTrash, MainComponentStyle, SectionContainer, TaskContainer, TaskName, TitleContainer, TitleSubContainer } from './mainStyle';
 import InputAdd from '../InputAdd/InputAdd';
 import { Context } from '../../Hooks/Contexts';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
 import { api } from '../../services/api';
 
@@ -13,24 +13,31 @@ export default function Main({TitleName}) {
   const { user, setMenuVisible } = useContext(Context);
   const [inputAdd, setInputAdd] = useState('');
   const [tasks, setTasks] = useState([]);
-
+  
+  const [checkedState, setCheckedState] = useState(
+    new Array(tasks.length).fill(true)
+  );
+  const [allTasksChecked,setAllTasksChecked] = useState(false);
+  const [isVisibleCheckbox,setIsVisibleCheckbox] = useState(false);
 
   useEffect(() => {
 
     const getTasks = async () => {
 
       try {
-        const tasks = await api.get('/tasks', {
+        const tasksApi = await api.get('/tasks', {
           headers: {
             'authorization': `Bearer ${user.token}`
           }
         });
 
-        setTasks(tasks.data.response)
+        setTasks(tasksApi.data.response)
+        if(tasksApi.data.response.length){
+          setCheckedState(new Array(tasksApi.data.response.length).fill(false))
+        }
       } catch (error) {
         if (error?.response.status === 401) {
           localStorage.clear();
-          alert(error?.response?.data?.error);
           navigate('/login');
           return;
         }
@@ -39,12 +46,9 @@ export default function Main({TitleName}) {
     }
     getTasks();
 
-  }, [navigate, user.token]);
+  }, [navigate, user.token,]);
 
 
-  const [checkedState, setCheckedState] = useState(
-    new Array(tasks.length).fill(false)
-  );
 
   const handleOnChange = (position) => {
     const updatedCheckedState = checkedState.map((item, index) =>
@@ -71,9 +75,16 @@ export default function Main({TitleName}) {
           'authorization': `Bearer ${user.token}`
         }
       });
-      const task = taskResponse?.data?.response
+      const task = taskResponse?.data?.response;
       const newTasks = [...tasks, task]
       setTasks(newTasks)
+      if(checkedState.length){
+        const newCheckedState = [...checkedState,false];
+      setCheckedState(newCheckedState);
+      }else{
+        setCheckedState([false]);
+      }
+     
       setInputAdd('');
     } catch (error) {
 
@@ -95,25 +106,78 @@ export default function Main({TitleName}) {
   }
   window.confirm("Deseja excluir essa tarefa?");
   try {
-    const taskResponse = await api.delete(`/tasks/task/${id}`,{
+    await api.delete(`/tasks/task/${id}`,{
       headers: {
         'authorization': `Bearer ${user.token}`
       }
     });
-    const task = taskResponse?.data?.response
-    console.log(task)
+ 
     setTasks(OldTasks => OldTasks.filter((task) => task._id !== id))
-
+const newCheckedState = [...checkedState]
+newCheckedState.pop()
+setCheckedState(newCheckedState)
   } catch (error) {
-console.log(error)
+
     if (error?.response?.status === 401) {
       localStorage.clear();
-      alert(error?.response?.data?.error);
       navigate('/login');
       return;
     }
     alert(error?.response?.data?.error);
   }
+ }
+
+ const handleCheckAllTasks = () => {
+ 
+  setAllTasksChecked(value => value? false:true)
+  setIsVisibleCheckbox(value => value? false:true)
+  const updatedCheckedState = checkedState.map((item, index) => item === false? true:item);
+
+  setCheckedState(updatedCheckedState)
+ 
+ }
+
+ const handleDeleteManyTasks = async () => {
+
+  if(!tasks.length || !checkedState.length){
+    alert("Não existem tarefas para serem excluídas!");
+    return;
+  }
+ 
+const tasksIdsToDelete = tasks.map((el,i) => checkedState[i] === true && (el))
+
+const filterValues = tasksIdsToDelete
+.filter((e) => e !== undefined)
+.map(e => e._id);
+
+
+  try {
+    const taskResponse = await api.delete(`/tasks`,{
+      headers: {
+        'authorization': `Bearer ${user.token}`
+      },
+    data:{tasks_id:filterValues}
+    });
+    const task = taskResponse?.data?.response;
+
+    setAllTasksChecked(false);
+
+    const ids = task.map(e => e.deleted &&(e.id))
+  const newTasks = tasks.filter(
+    (el,indx) => !ids.includes(el._id) && (el)
+    )
+  setTasks(newTasks)
+  setCheckedState(new Array(newTasks.length).fill(false))
+  } catch (error) {
+    if (error?.response?.status === 401) {
+      localStorage.clear();
+      navigate('/login');
+      return;
+    }
+    alert(error?.response?.data?.error);
+  }
+
+
  }
 
   return (
@@ -126,24 +190,26 @@ console.log(error)
           <TitleSubContainer>
           <IconTitle /> <H1>{TitleName}</H1>
           </TitleSubContainer>
-          <DropDownContainer>
-            <DropDownSubContainer>
-             <DropDownListContainer>
-              <DropDownListItemContainer>
-
-              </DropDownListItemContainer>
-             </DropDownListContainer>
-            </DropDownSubContainer>
-          <ThreeDots/>
-          </DropDownContainer>
+         <ContainerButtons>
+         <ButtonInconDelete onClick={handleDeleteManyTasks} selected={allTasksChecked}>
+          Excluir
+         </ButtonInconDelete>
+         <ButtonIncon 
+          onClick={handleCheckAllTasks}
+          selected={allTasksChecked}>
+         <CheckedAllIcon/>
+         </ButtonIncon>
+         </ContainerButtons>
+         
         </TitleContainer>
 
         <SectionContainer>
           {tasks.length ? (tasks.map((task, index) => (<ArticleContainer key={index}>
             <CheckboxInput name={task?.title}
               checked={checkedState[index]}
+             
               onChange={() => handleOnChange(index)}
-              type='checkbox' />
+              type='checkbox' isVisible={isVisibleCheckbox}  />
             <TaskName>
               {task.title}
             </TaskName>
