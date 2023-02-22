@@ -1,54 +1,31 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { ArticleContainer, ButtonIncon, ButtonInconDelete, CheckboxInput, CheckedAllIcon, ContainerButtons, H1, IconBar, IconTitle, IconTrash, MainComponentStyle, SectionContainer, TaskContainer, TaskName, TitleContainer, TitleSubContainer } from './mainStyle';
+import { ArticleContainer, ButtonIncon, ButtonInconDelete, CheckBoxCompleted, CheckBoxContainerCicle, CheckboxInput, CheckedAllIcon, Checkmark, ContainerButtons, H1, IconBar, IconTitle, IconTrash, MainComponentStyle, SectionContainer, TaskContainer, TaskName, TaskNameContainer, TitleContainer, TitleSubContainer } from './mainStyle';
 import InputAdd from '../InputAdd/InputAdd';
 import { Context } from '../../Hooks/Contexts';
 import { useNavigate } from 'react-router-dom';
 
 import { api } from '../../services/api';
 
-export default function Main({TitleName}) {
+export default function Main({
+  TitleName
+  ,user
+  ,checkedState
+  ,setCheckedState
+  ,tasks
+  ,setTasks
+  ,bgColor
+}) {
 
   const navigate = useNavigate();
 
-  const { user, setMenuVisible } = useContext(Context);
+  const {  setMenuVisible } = useContext(Context);
   const [inputAdd, setInputAdd] = useState('');
-  const [tasks, setTasks] = useState([]);
   
-  const [checkedState, setCheckedState] = useState(
-    new Array(tasks.length).fill(true)
-  );
+
+ 
   const [allTasksChecked,setAllTasksChecked] = useState(false);
   const [isVisibleCheckbox,setIsVisibleCheckbox] = useState(false);
-
-  useEffect(() => {
-
-    const getTasks = async () => {
-
-      try {
-        const tasksApi = await api.get('/tasks', {
-          headers: {
-            'authorization': `Bearer ${user.token}`
-          }
-        });
-
-        setTasks(tasksApi.data.response)
-        if(tasksApi.data.response.length){
-          setCheckedState(new Array(tasksApi.data.response.length).fill(false))
-        }
-      } catch (error) {
-        if (error?.response.status === 401) {
-          localStorage.clear();
-          navigate('/login');
-          return;
-        }
-        alert(error?.response?.data?.error);
-      }
-    }
-    getTasks();
-
-  }, [navigate, user.token,]);
-
-
+ 
 
   const handleOnChange = (position) => {
     const updatedCheckedState = checkedState.map((item, index) =>
@@ -168,6 +145,7 @@ const filterValues = tasksIdsToDelete
     )
   setTasks(newTasks)
   setCheckedState(new Array(newTasks.length).fill(false))
+  setIsVisibleCheckbox(false);
   } catch (error) {
     if (error?.response?.status === 401) {
       localStorage.clear();
@@ -180,8 +158,46 @@ const filterValues = tasksIdsToDelete
 
  }
 
+ const handleCompleted = async (id,taskCompleted) => {
+
+if(!id){
+  alert('Id inválido!')
+  return;
+}
+const data = {completed:!taskCompleted}
+
+
+try {
+ await api.put(`/tasks/task/${id}`,data,{
+    headers: {
+      'authorization': `Bearer ${user.token}`
+    }
+  });
+
+  const OldTasks = tasks.map(
+    (task) => {
+      if(task._id === id){
+        task.completed = !task.completed
+        return task
+      }
+      return task
+    }
+    )
+
+setTasks(OldTasks)
+} catch (error) {
+
+  if (error?.response?.status === 401) {
+    localStorage.clear();
+    navigate('/login');
+    return;
+  }
+  alert(error?.response?.data?.error);
+}
+ }
+
   return (
-    <MainComponentStyle color='white'>
+    <MainComponentStyle bg={bgColor}>
       <IconBar onClick={() => setMenuVisible((res) => res === true ? (false) : (true))} />
 
       <TaskContainer>
@@ -205,15 +221,24 @@ const filterValues = tasksIdsToDelete
 
         <SectionContainer>
           {tasks.length ? (tasks.map((task, index) => (<ArticleContainer key={index}>
+            
+            <CheckBoxContainerCicle isVisible={isVisibleCheckbox}>
+            <CheckBoxCompleted type='checkbox'
+            checked={task.completed}  value={task.completed} onChange={ () => handleCompleted(task._id,task.completed)}/>
+            <Checkmark/>
+            </CheckBoxContainerCicle>
+            <TaskNameContainer>
+            <TaskName>
+            {task.title}
+            </TaskName>
+            </TaskNameContainer>
+            <IconTrash  onClick={()=> handleDeleteTask(task._id)}
+             isvisible={{isVisibleCheckbox}} />
             <CheckboxInput name={task?.title}
               checked={checkedState[index]}
-             
+              value={checkedState[index]}
               onChange={() => handleOnChange(index)}
               type='checkbox' isVisible={isVisibleCheckbox}  />
-            <TaskName>
-              {task.title}
-            </TaskName>
-            <IconTrash onClick={()=> handleDeleteTask(task._id)} />
           </ArticleContainer>))) : (<h1>Suas tarefas serão mostradas aqui caso não estejam em uma lista!</h1>)}
 
         </SectionContainer>
