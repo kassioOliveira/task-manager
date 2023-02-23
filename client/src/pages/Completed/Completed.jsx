@@ -52,9 +52,10 @@ export default function Completed() {
     user={user} 
     checkedState={checkedState}
     setCheckedState={setCheckedState}
-    tasks={tasks}
+    tasks={tasks.filter(tasks => tasks.completed === true)}
     setTasks={setTasks}
     bgColor={'green'}
+    isVisisbleInputAdd={false}
     />
     </>
   )

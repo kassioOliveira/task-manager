@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { api } from '../../services/api';
 
-export default function Home() {
+export default function Important() {
 
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ export default function Home() {
     const getTasks = async () => {
 
       try {
-        const tasksApi = await api.get('/tasks', {
+        const tasksApi = await api.get('/tasks/important', {
           headers: {
             'authorization': `Bearer ${user.token}`
           }
@@ -48,14 +48,15 @@ export default function Home() {
   return (
     <>
     <Header/>
-    <Main TitleName={'Tarefas'}
+    <Main TitleName={'Importantes'}
     user={user} 
     checkedState={checkedState}
     setCheckedState={setCheckedState}
-    tasks={tasks}
+    tasks={tasks.filter(task => task.important === true)}
     setTasks={setTasks}
-    bgColor={''}
+    bgColor={'#FEDF00'}
     isVisisbleInputAdd={true}
+    category={{important:true}}
     />
     </>
   )

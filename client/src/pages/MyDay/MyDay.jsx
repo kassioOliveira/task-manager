@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { api } from '../../services/api';
 
-export default function Home() {
+export default function MyDay() {
 
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ export default function Home() {
     const getTasks = async () => {
 
       try {
-        const tasksApi = await api.get('/tasks', {
+        const tasksApi = await api.get('/tasks/myday', {
           headers: {
             'authorization': `Bearer ${user.token}`
           }
@@ -48,14 +48,15 @@ export default function Home() {
   return (
     <>
     <Header/>
-    <Main TitleName={'Tarefas'}
+    <Main TitleName={'Meu Dia'}
     user={user} 
     checkedState={checkedState}
     setCheckedState={setCheckedState}
     tasks={tasks}
     setTasks={setTasks}
-    bgColor={''}
+    bgColor={'blue'}
     isVisisbleInputAdd={true}
+    category={{my_day:true}}
     />
     </>
   )

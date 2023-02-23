@@ -11,7 +11,7 @@ export const Container = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 10;
+    z-index: 100;
     background: rgb(0,16,36);
     background: linear-gradient(300deg, rgba(0,16,36,0.9808298319327731) 39%, rgba(31,42,89,1) 54%);
      display: none;

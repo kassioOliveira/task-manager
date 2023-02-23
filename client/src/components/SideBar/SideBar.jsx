@@ -16,8 +16,8 @@ export default function SideBar() {
      <Nav>
       <InputSearch/>
         <NavContainerStyled>
-        <NavLink to={'/dia'}><BsSun/>Meu Dia</NavLink>
-<NavLink to={'/ola'}><BsStar/>Importante</NavLink>
+        <NavLink to={'/meudia'}><BsSun/>Meu Dia</NavLink>
+<NavLink to={'/importante'}><BsStar/>Importante</NavLink>
 <NavLink to={'/completas'}><GiConfirmed/>Completas</NavLink>
 <NavLink to={'/'}><CgNotes/>Tarefas</NavLink>
 <NavLink to={'/listas'}><BsList/>Listas</NavLink>

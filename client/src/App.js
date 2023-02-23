@@ -7,6 +7,8 @@ import Home from "./pages/Home/Home";
 import SignUp from "./pages/SignUp/SignUp";
 import Login from "./pages/Login/Login";
 import Completed from "./pages/Completed/Completed";
+import Important from "./pages/Important/Important";
+import MyDay from "./pages/MyDay/MyDay";
 
 
 
@@ -20,6 +22,9 @@ function App() {
      <Route path="/signup" element={<SignUp/>} />
      <Route path="/login" element={<Login/>} />
      <Route path="/completas" element={<PriveteRouteAuth><Completed/></PriveteRouteAuth>} />
+     <Route path="/importante" element={<PriveteRouteAuth><Important/></PriveteRouteAuth>} />
+     <Route path="/meudia" element={<PriveteRouteAuth><MyDay/></PriveteRouteAuth>} />
+     
      </Routes>
 </>
 
