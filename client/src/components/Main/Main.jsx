@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { ArticleContainer, ButtonIncon, ButtonInconDelete, CheckBoxCompleted, CheckBoxContainerCicle, CheckboxInput, CheckedAllIcon, Checkmark, ContainerButtons, H1, IconBar, IconTitle, IconTrash, MainComponentStyle, SectionContainer, TaskContainer, TaskName, TaskNameContainer, TitleContainer, TitleSubContainer } from './mainStyle';
+import React, { useContext, useState} from 'react';
+import { ArticleContainer, ButtonAdd, ButtonIncon, ButtonInconDelete, CheckBoxCompleted, CheckBoxContainerCicle, CheckboxInput, CheckedAllIcon, CheckedStar, CheckListIcon, Checkmark, ContainerButtons, ContainerDropDownList, H1, IconBar, IconStar, IconTrash, ItemDropDown, MainComponentStyle, SectionContainer, SubContainerDropDown, TaskContainer, TaskName, TaskNameContainer, TitleContainer, TitleSubContainer } from './mainStyle';
 import InputAdd from '../InputAdd/InputAdd';
 import { Context } from '../../Hooks/Contexts';
 import { useNavigate } from 'react-router-dom';
@@ -14,17 +14,19 @@ export default function Main({
   ,tasks
   ,setTasks
   ,bgColor
+  ,isVisisbleInputAdd
+  ,category
 }) {
 
   const navigate = useNavigate();
 
   const {  setMenuVisible } = useContext(Context);
-  const [inputAdd, setInputAdd] = useState('');
-  
 
- 
+  const [inputAdd, setInputAdd] = useState('');
   const [allTasksChecked,setAllTasksChecked] = useState(false);
   const [isVisibleCheckbox,setIsVisibleCheckbox] = useState(false);
+  const [tasksListChecked,setTasksListChecked] = useState(false);
+  const [showDropDown,setShowDropDown] = useState(false);
  
 
   const handleOnChange = (position) => {
@@ -45,9 +47,18 @@ export default function Main({
       alert('Acione o titúlo para sua tarefa!');
       return;
     }
+    let data = {title:inputAdd}
+    if(category){
+      if(category.important){
+        data.important = category.important;
+      }
+      if(category.my_day){
+        data.my_day = category.my_day;
+      }
+    }
 
     try {
-      const taskResponse = await api.post('/tasks', { title: inputAdd }, {
+      const taskResponse = await api.post('/tasks',data, {
         headers: {
           'authorization': `Bearer ${user.token}`
         }
@@ -196,6 +207,44 @@ setTasks(OldTasks)
 }
  }
 
+ const handleImportant = async (id,taskImportant) => {
+
+if(!id){
+  alert('Id inválido!')
+  return;
+}
+const data = {important:!taskImportant}
+
+
+try {
+ await api.put(`/tasks/task/${id}`,data,{
+    headers: {
+      'authorization': `Bearer ${user.token}`
+    }
+  });
+
+  const OldTasks = tasks.map(
+    (task) => {
+      if(task._id === id){
+        task.important = !task.important
+        return task
+      }
+      return task
+    }
+    )
+
+setTasks(OldTasks)
+} catch (error) {
+
+  if (error?.response?.status === 401) {
+    localStorage.clear();
+    navigate('/login');
+    return;
+  }
+  alert(error?.response?.data?.error);
+}
+ }
+
   return (
     <MainComponentStyle bg={bgColor}>
       <IconBar onClick={() => setMenuVisible((res) => res === true ? (false) : (true))} />
@@ -204,23 +253,55 @@ setTasks(OldTasks)
 
         <TitleContainer>
           <TitleSubContainer>
-          <IconTitle /> <H1>{TitleName}</H1>
+           <H1>{TitleName}</H1>
           </TitleSubContainer>
          <ContainerButtons>
          <ButtonInconDelete onClick={handleDeleteManyTasks} selected={allTasksChecked}>
           Excluir
          </ButtonInconDelete>
+         <ButtonAdd selected={allTasksChecked} 
+          listselected={{tasksListChecked}}
+          onClick={()=> setShowDropDown((value) => !value)}/>
          <ButtonIncon 
           onClick={handleCheckAllTasks}
-          selected={allTasksChecked}>
-         <CheckedAllIcon/>
+          selected={allTasksChecked} 
+          listSelected={tasksListChecked}>
+           
+         <CheckedAllIcon />
          </ButtonIncon>
+         <CheckListIcon selected={allTasksChecked}
+          listselected={{tasksListChecked}}
+          onClick={()=> setTasksListChecked((value) => !value)}
+          />
+         <ContainerDropDownList drop={showDropDown}>
+          <SubContainerDropDown>
+            <ItemDropDown>
+              Lista
+            </ItemDropDown>
+            <ItemDropDown>
+              Lista
+            </ItemDropDown>
+            <ItemDropDown>
+              Lista
+            </ItemDropDown>
+            <ItemDropDown>
+              Lista
+            </ItemDropDown>
+            <ItemDropDown>
+              Lista
+            </ItemDropDown>
+          </SubContainerDropDown>
+         </ContainerDropDownList>
          </ContainerButtons>
          
         </TitleContainer>
 
         <SectionContainer>
           {tasks.length ? (tasks.map((task, index) => (<ArticleContainer key={index}>
+            {
+              !task.important?(<IconStar onClick={()=>handleImportant(task._id,task.important)}/>)
+              :(<CheckedStar onClick={()=>handleImportant(task._id,task.important)}/>)
+            }
             
             <CheckBoxContainerCicle isVisible={isVisibleCheckbox}>
             <CheckBoxCompleted type='checkbox'
@@ -245,9 +326,13 @@ setTasks(OldTasks)
 
       </TaskContainer>
 
-      <InputAdd inputAdd={inputAdd}
+      {
+        isVisisbleInputAdd === true && (
+          <InputAdd inputAdd={inputAdd}
         handleInputAdd={handleInputAdd}
         handleCreateTask={handleCreateTask} />
+        )
+      }
 
 
     </MainComponentStyle>

@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import {FaBars} from 'react-icons/fa'
-import {BsHouseDoor,BsTrash,BsCheckAll} from 'react-icons/bs'
+import {BsTrash,BsCheckAll,BsStar,BsStarFill, BsList,BsArrowDownCircleFill} from 'react-icons/bs'
 
 
 export const MainComponentStyle = styled.main`
@@ -100,9 +100,6 @@ export const TitleContainer = styled.div`
    align-items: center;
     }
 `
-export const IconTitle = styled(BsHouseDoor)`
-    font-size:30px;
-`
 export const TitleSubContainer = styled.div`
     height: 100%;
     width: 150px;
@@ -111,15 +108,6 @@ export const TitleSubContainer = styled.div`
     align-items: center;
 `
 
-export const DropDownContainer = styled.div`
-    border: 1px solid greenyellow;
-    width: 150px;
-    height: 100%;
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    position: relative;
-`
 export const ContainerButtons = styled.div `
 width: 200px;
 height: 100%;
@@ -127,6 +115,67 @@ display: flex;
 justify-content: space-around;
 align-items: center;
 position: relative;
+border: 1px solid red;
+`
+
+export const ContainerDropDownList = styled.div`
+position: absolute;
+transition: all .6s ease-in;
+width: 95%;
+height: 0px;
+padding: 5px;
+background-color: #1f2a59;
+top: 103%;
+left: 0;
+z-index: 100;
+overflow: hidden;
+
+${({drop}) => drop && css`
+    height: 150px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+`}
+
+`
+export const SubContainerDropDown = styled.div`
+height: 100%;
+width: 100%;
+
+overflow: auto;
+::-webkit-scrollbar{
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb{
+   // background-color: #8a81d26a;
+   border: 1px solid #8a81d26a;
+   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    border-radius:5px;
+}
+:hover{
+    ::-webkit-scrollbar-thumb{
+   border: 1px solid #ffff;
+
+}
+}
+`
+
+export const ItemDropDown = styled.div`
+width: 90%;
+height: 30px;
+color: gray;
+display: flex;
+justify-content: center;
+align-items: center;
+border: 1px solid rgba(138, 129, 210, .2);
+border-radius:5px;
+box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+margin:5px auto;
+cursor: pointer;
+
+:hover{
+    color: #ffff;
+    border: 1px solid #FFFF;
+}
 `
 
 export const H1 = styled.h1`
@@ -146,27 +195,51 @@ export const TaskNameContainer = styled.div`
     color: #ffff;
     cursor: pointer;
     padding: 0;
-   max-height:100%;
+   height:50px;
    text-align: center;
-    width: 40%;   
-    overflow:hidden;
+    width: 40%; 
+    
 `
 export const TaskName = styled.span`
      text-align:center;
     overflow: hidden;
+    line-height: 50px;
     text-overflow:ellipsis;
+    white-space: nowrap;
     width: 100%;
+   height: 50px;
+    
 
 `
 export const CheckedAllIcon = styled(BsCheckAll)`
     font-size: 20px;
+`
+export const CheckListIcon = styled(BsList)`
+position: absolute;
+right: 10px;
+cursor: pointer;
+${({selected}) => selected && (css`
+display: none;
+
+`)}
+
+${({listselected}) =>listselected.tasksListChecked && (css`
+display: initial;
+
+`)}
 `
 export const ButtonIncon = styled.button`
 cursor: pointer;
 border: none;
 border-radius:5px;
 position: absolute;
-right: 10px;
+right: 40%;
+
+${({listSelected}) =>listSelected && (css`
+display: none;
+
+`)}
+
 ${({selected}) => selected && (css`
 background-color: #1fe71f;
 
@@ -188,6 +261,19 @@ display: initial;
     
 `
 
+export const ButtonAdd = styled(BsArrowDownCircleFill)`
+ font-size: 20px;
+color: #ffff;
+border: none;
+cursor: pointer;
+left: 0;
+display: none;
+${({listselected,selected}) =>listselected.tasksListChecked && !selected && (css`
+display: initial;
+
+`)}
+`
+
 export const IconBar = styled(FaBars)`
     width: 40px;
     height: 40px;
@@ -198,6 +284,20 @@ export const IconBar = styled(FaBars)`
     @media screen and (min-width: 650px) {
         display: none;
     }
+`
+export const IconStar = styled(BsStar)`
+font-size:20px;
+position: absolute;
+left: 5px;
+cursor: pointer;
+
+`
+export const CheckedStar = styled(BsStarFill)`
+font-size:20px;
+position: absolute;
+left: 5px;
+cursor: pointer;
+
 `
 
 export const IconTrash = styled(BsTrash)`
