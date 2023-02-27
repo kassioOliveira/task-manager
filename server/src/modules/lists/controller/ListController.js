@@ -1,8 +1,11 @@
 const { default: mongoose } = require("mongoose");
 const Task = require("../../tasks/model/Task");
+const List = require("../model/List");
 const AddManyTaskToListService = require("../service/AddManyTaskToListService");
 const AddTaskToListService = require("../service/AddTaskToListService");
 const CreateListService = require("../service/CreateListService");
+const DeleteListService = require("../service/DeleteListService");
+const DeleteManyListService = require("../service/DeleteManyListService");
 const ListOfListService = require("../service/ListOfListService");
 const ListTaskOfListService = require("../service/ListTaskOfListService");
 const RemoveManyTaskFromListService = require("../service/RemoveManyTaskFromListService");
@@ -25,9 +28,9 @@ class ListController {
 
     try {
 
-       await createListService.createList(createList);
+     const list =  await createListService.createList(createList);
 
-        return res.status(201).json({response:"Lista criada com sucesso!"});
+        return res.status(201).json({response:list});
         
     } catch (error) {
         return res.status(500).json({error:error.message});
@@ -60,7 +63,6 @@ class ListController {
 
     const addTaskToListService = new AddTaskToListService();
 
-    
 
     try {
 
@@ -83,7 +85,7 @@ class ListController {
     const user = req.user;
     const {list_id} = req.params;
     const {tasks_ids} = req.body;
-
+ 
     if(!tasks_ids.length){
         return res.status(400).json({error:"Campo ids inválido!"});
     }
@@ -200,6 +202,65 @@ class ListController {
         return res.status(500).json({error:error.message});
     }
    }
+
+   async deleteMany(req,res) {
+    const {list_ids} = req.body;
+    const user = req.user;
+
+    const deleteManyListService = new DeleteManyListService();
+
+    try {
+   
+       const allLists = await List.find({user_id:user.id,_id:{$in:list_ids}});
+
+       const validIds = allLists.map((el)=>{
+        return el._id.toString();
+       }); 
+
+       if(!validIds.length){
+        return res.status(404).json({error:"As Listas não podem ser deletadas, pois elas não existem"});
+       }
+
+      await deleteManyListService.deleteManyList(validIds,user);
+
+       const deletedWithSuccess = list_ids.map((el)=>{
+        if(validIds.includes(el)){
+            return {id:el,deleted:true};
+        }else{
+          return {id:el,deleted:false,error:"Id inválido!"};
+        }
+      });
+       
+        return res.status(200).json({response:deletedWithSuccess});
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error:error.message});
+    }
+
+}
+
+async delete(req,res){
+    const user = req.user;
+    const {list_id} = req.params;
+
+    const deleteListService = new DeleteListService();
+
+    try {
+        const listToDelete = await List.findOne({user_id:user.id,_id:list_id});
+
+        if(!listToDelete){
+            return res.status(404).json({error:" A Lista não pode ser deletada, pois ela não existe!"});
+        }
+
+       await deleteListService.DeleteList(listToDelete._id.toString(),user);
+
+        return res.status(200).json({response:{id:listToDelete._id.toString(),deleted:true}});
+
+    } catch (error) {
+        return res.status(500).json({error:error.message});
+    }
+}
+
 }
 
 module.exports = ListController;

@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import {FaBars} from 'react-icons/fa'
 import {BsTrash,BsCheckAll,BsStar,BsStarFill, BsList,BsArrowDownCircleFill} from 'react-icons/bs'
-
+import {CgClose} from 'react-icons/cg'
 
 export const MainComponentStyle = styled.main`
 
@@ -122,15 +122,17 @@ export const ContainerDropDownList = styled.div`
 position: absolute;
 transition: all .6s ease-in;
 width: 95%;
-height: 0px;
+height: 0;
 padding: 5px;
-background-color: #1f2a59;
+
+background-color: transparent;
 top: 103%;
 left: 0;
-z-index: 100;
+z-index: 50;
 overflow: hidden;
 
-${({drop}) => drop && css`
+${({drop,listselected}) => drop  && listselected  && css`
+    background-color: #1f2a59;
     height: 150px;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
 `}
@@ -139,7 +141,7 @@ ${({drop}) => drop && css`
 export const SubContainerDropDown = styled.div`
 height: 100%;
 width: 100%;
-
+position: relative;
 overflow: auto;
 ::-webkit-scrollbar{
     width: 8px;
@@ -177,14 +179,39 @@ cursor: pointer;
     border: 1px solid #FFFF;
 }
 `
+export const ButtonDropDownCreateList = styled.button`
+font-size:30px;
+color: #fff;
+background-color: transparent;
+border: none;
+width: 30px;
+height: 30px;
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+margin: auto;
+box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 
+
+
+`
 export const H1 = styled.h1`
     color:#ffff;
 `
 export const CheckboxInput = styled.input`
     display: none;
 
-    ${({isVisible}) => isVisible && (css`
+    ${({isVisible,listselected}) => !isVisible && listselected && (css`
+    display: initial;
+    `)}
+
+    ${({isVisible,listselected}) => isVisible && !listselected && (css`
     display: initial;
     `)}
 `
@@ -379,6 +406,77 @@ ${({isVisible}) => isVisible && (css`
 display: none;
 `)}
   
+`
+export const BoxContainer = styled.div`
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin:auto;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(31, 42, 89,.9);
+    display: none;
+    ${({isBoxVisible})=> isBoxVisible && css`
+    display: initial;
+    `}
+    z-index:80;
+`
+
+export const BoxCreateList = styled.div`
+position:absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin:auto;
+width: 200px;
+height: 150px;
+border-radius:5px;
+display: flex;
+flex-direction:column;
+justify-content: space-evenly;
+align-items: center;
+box-shadow: rgba(0, 0, 0, 0.65)  1px 1px 10px 2px;
+
+`
+
+export const CloseBox = styled(CgClose)`
+font-size:25px;
+position: absolute;
+right: 10px;
+top: 10px;
+cursor: pointer;
+:hover{
+    color: red;
+}
+`
+
+export const TitleBox = styled.h1`
+    font-size:1rem;
+`
+
+export const InputBox = styled.input`
+border: 1px solid #ffff;
+color: #ffff;
+height: 20px;
+border-radius:5px;
+background-color:transparent;
+:focus {
+        box-shadow: 0 0 0 0;
+         outline:0;
+         
+    }
+`
+
+export const ButtonBox = styled.button`
+border: none;
+padding: 10px;
+border-radius:5px;
+color: #ffff;
+background-color: blue;
+cursor: pointer;
 `
 
 
