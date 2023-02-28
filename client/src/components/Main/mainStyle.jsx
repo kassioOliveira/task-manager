@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import {FaBars} from 'react-icons/fa'
 import {BsTrash,BsCheckAll,BsStar,BsStarFill, BsList,BsArrowDownCircleFill} from 'react-icons/bs'
-import {CgClose} from 'react-icons/cg'
+import {CgClose,CgPlayListRemove} from 'react-icons/cg'
 
 export const MainComponentStyle = styled.main`
 
@@ -115,7 +115,6 @@ display: flex;
 justify-content: space-around;
 align-items: center;
 position: relative;
-border: 1px solid red;
 `
 
 export const ContainerDropDownList = styled.div`
@@ -260,7 +259,7 @@ cursor: pointer;
 border: none;
 border-radius:5px;
 position: absolute;
-right: 40%;
+right: 45%;
 
 ${({listSelected}) =>listSelected && (css`
 display: none;
@@ -280,7 +279,7 @@ color: #ffff;
 padding: 5px;
 display: none;
 right: initial;
-left: 10px;
+left: 15px;
 ${({selected}) => selected && (css`
 display: initial;
 
@@ -477,6 +476,30 @@ border-radius:5px;
 color: #ffff;
 background-color: blue;
 cursor: pointer;
+`
+export const RemoveFromListIcon = styled(CgPlayListRemove)`
+    font-size: 20px;
+    position: absolute;
+    right: 5px;
+    display: none;
+    cursor: pointer;
+    ${({islist,isvisible,listselected}) =>  islist?.isList && !isvisible?.isVisibleCheckbox && !listselected?.tasksListChecked && (css`
+display: initial;
+`)}
+`
+
+export const ButtonRemoveFromList = styled(ButtonIncon)`
+    border: 1px solid gray;
+    background-color:transparent;
+color: #ffff;
+padding: 5px;
+display: none;
+right: 10px;
+
+${({selected,isList}) => selected && isList?.isList && (css`
+display: initial;
+
+`)}
 `
 
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState} from 'react';
-import { ArticleContainer, BoxContainer, BoxCreateList, ButtonAdd, ButtonBox, ButtonDropDownCreateList, ButtonIncon, ButtonInconDelete, CheckBoxCompleted, CheckBoxContainerCicle, CheckboxInput, CheckedAllIcon, CheckedStar, CheckListIcon, Checkmark, CloseBox, ContainerButtons, ContainerDropDownList, H1, IconBar, IconStar, IconTrash, InputBox, ItemDropDown, MainComponentStyle, SectionContainer, SubContainerDropDown, TaskContainer, TaskName, TaskNameContainer, TitleBox, TitleContainer, TitleSubContainer } from './mainStyle';
+import {RemoveFromListIcon, ArticleContainer, BoxContainer, BoxCreateList, ButtonAdd, ButtonBox, ButtonDropDownCreateList, ButtonIncon, ButtonInconDelete, CheckBoxCompleted, CheckBoxContainerCicle, CheckboxInput, CheckedAllIcon, CheckedStar, CheckListIcon, Checkmark, CloseBox, ContainerButtons, ContainerDropDownList, H1, IconBar, IconStar, IconTrash, InputBox, ItemDropDown, MainComponentStyle, SectionContainer, SubContainerDropDown, TaskContainer, TaskName, TaskNameContainer, TitleBox, TitleContainer, TitleSubContainer, ButtonRemoveFromList } from './mainStyle';
 import InputAdd from '../InputAdd/InputAdd';
 import { Context } from '../../Hooks/Contexts';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,8 @@ export default function Main({
   ,bgColor
   ,isVisisbleInputAdd
   ,category
+  ,isList 
+  ,param
 }) {
 
   const navigate = useNavigate();
@@ -178,6 +180,78 @@ const filterValues = tasksIdsToDelete
 
  }
 
+ const handleRemoveManyTasksFromList = async () => {
+  if(!tasks.length || !checkedState.length){
+    alert("Não existem tarefas para serem excluídas!");
+    return;
+  }
+ 
+const tasksIdsToDelete = tasks.map((el,i) => checkedState[i] === true && (el))
+
+const filterValues = tasksIdsToDelete
+.map(e => e._id).filter((e) => e !== undefined)
+
+if(!param){
+alert("Lista inválida!");
+return;
+}
+
+  try {
+    const taskResponse = await api.put(`/list/tasks/${param}`,{tasks_ids:filterValues},{
+      headers: {
+        'authorization': `Bearer ${user.token}`
+      }
+    });
+    const task = taskResponse?.data?.response;
+console.log(task)
+    setAllTasksChecked(false);
+
+  const newTasks = tasks.filter(
+    (el,indx) => !filterValues.includes(el._id) && (el)
+    )
+  setTasks(newTasks)
+  setCheckedState(new Array(newTasks.length).fill(false))
+  setIsVisibleCheckbox(false);
+  } catch (error) {
+    if (error?.response?.status === 401) {
+      localStorage.clear();
+      navigate('/login');
+      return;
+    }
+    alert(error?.response?.data?.error);
+  }
+ }
+
+ const handleRemoveTaskFromList = async (id) => {
+  if(!id){
+    alert('Id inválido!');
+    return;
+  }
+
+  try {
+   await api.put(`/list/task/${param}/${id}`,{
+      headers: {
+        'authorization': `Bearer ${user.token}`
+      }
+    });
+  
+    const OldTasks = tasks.filter((task) => task._id !== id)
+  
+   setTasks(OldTasks)
+  const newCheckedState = [...checkedState]
+  newCheckedState.pop()
+  setCheckedState(newCheckedState)
+  } catch (error) {
+  console.log(error)
+    if (error?.response?.status === 401) {
+      localStorage.clear();
+      navigate('/login');
+      return;
+    }
+    alert(error?.response?.data?.error);
+  }
+ }
+
  const handleCompleted = async (id,taskCompleted) => {
 
 if(!id){
@@ -330,6 +404,9 @@ const filterValues = tasksIdsToAdd
          <ButtonInconDelete onClick={handleDeleteManyTasks} selected={allTasksChecked}>
           Excluir
          </ButtonInconDelete>
+         <ButtonRemoveFromList onClick={handleRemoveManyTasksFromList} isList={{isList}} selected={allTasksChecked}>
+          Remover
+         </ButtonRemoveFromList>
          <ButtonAdd selected={allTasksChecked} 
           listselected={{tasksListChecked}}
           onClick={()=> setShowDropDown((value) => !value)}/>
@@ -387,14 +464,16 @@ const filterValues = tasksIdsToAdd
             </TaskNameContainer>
             <IconTrash  onClick={()=> handleDeleteTask(task._id)}
              isvisible={{isVisibleCheckbox}} />
+             <RemoveFromListIcon onClick={()=>handleRemoveTaskFromList(task._id)}
+              islist={{isList}} isvisible={{isVisibleCheckbox}} listselected={{tasksListChecked}} />
             <CheckboxInput name={task?.title}
               checked={checkedState[index]}
               value={checkedState[index]}
               onChange={() => handleOnChange(index)}
-              type='checkbox' isVisible={isVisibleCheckbox} 
+              type='checkbox'  isVisible={isVisibleCheckbox} 
               listselected={tasksListChecked}
               />
-          </ArticleContainer>))) : (<h1>Suas tarefas serão mostradas aqui caso não estejam em uma lista!</h1>)}
+          </ArticleContainer>))) : (<h1>Suas tarefas serão mostradas aqui!</h1>)}
 
         </SectionContainer>
 

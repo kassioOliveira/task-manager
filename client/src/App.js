@@ -10,6 +10,7 @@ import Completed from "./pages/Completed/Completed";
 import Important from "./pages/Important/Important";
 import MyDay from "./pages/MyDay/MyDay";
 import List from "./pages/List/List";
+import ListTask from "./pages/ListTask/ListTask";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
      <Route path="/importante" element={<PriveteRouteAuth><Important/></PriveteRouteAuth>} />
      <Route path="/meudia" element={<PriveteRouteAuth><MyDay/></PriveteRouteAuth>} />
      <Route path="/listas" element={<PriveteRouteAuth><List/></PriveteRouteAuth>} />
+     <Route path="/listas/:listaId" element={<PriveteRouteAuth><ListTask/></PriveteRouteAuth>} />
      </Routes>
 </>
 

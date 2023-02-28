@@ -210,7 +210,7 @@ export default function List() {
                 return(
                     <ArticleContainer key={list._id}>
             <ListNameContainer>
-                    <ListName to='/taskDetails'>
+                    <ListName to={`/listas/${list._id}`}>
                        {list.name}
                     </ListName>
                 </ListNameContainer>
