@@ -5,6 +5,7 @@ import { Context } from '../../Hooks/Contexts';
 import { useNavigate } from 'react-router-dom';
 
 import { api } from '../../services/api';
+import ItemEdit from '../ItemEdit/ItemEdit';
 
 export default function Main({
   TitleName
@@ -33,6 +34,9 @@ export default function Main({
   const [showDropDown,setShowDropDown] = useState(false);
   const [showBox,setShowBox] = useState(false);
   const [inputListName,setInputListName] = useState('');
+  const [currentTaskToEdit, setCurrentTaskToEdit] = useState('');
+  const [isEditable, setIsEditable] = useState(false);
+
  
 
   const handleOnChange = (position) => {
@@ -390,6 +394,11 @@ const filterValues = tasksIdsToAdd
 
  }
 
+ const handleEdit = (id) => {
+setCurrentTaskToEdit(v => v = id);
+setIsEditable(v => !v);
+ }
+
   return (
     <MainComponentStyle bg={bgColor}>
       <IconBar onClick={() => setMenuVisible((res) => res === true ? (false) : (true))} />
@@ -457,8 +466,8 @@ const filterValues = tasksIdsToAdd
             checked={task.completed}  value={task.completed} onChange={ () => handleCompleted(task._id,task.completed)}/>
             <Checkmark/>
             </CheckBoxContainerCicle>
-            <TaskNameContainer>
-            <TaskName>
+            <TaskNameContainer onClick={()=>handleEdit(task._id)}>
+            <TaskName >
             {task.title}
             </TaskName>
             </TaskNameContainer>
@@ -500,6 +509,15 @@ const filterValues = tasksIdsToAdd
           </ButtonBox>
         </BoxCreateList>
       </BoxContainer>
+
+      {
+        isEditable && (
+          <ItemEdit isTask={false} isEditable={isEditable}
+       currentTask={currentTaskToEdit} 
+       lists={lists} setIsEditable={setIsEditable} tasks={tasks} setTasks={setTasks} />
+        )
+
+      }
 
 
     </MainComponentStyle>

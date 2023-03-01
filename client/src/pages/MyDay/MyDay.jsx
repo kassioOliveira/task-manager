@@ -52,7 +52,7 @@ export default function MyDay() {
     user={user} 
     checkedState={checkedState}
     setCheckedState={setCheckedState}
-    tasks={tasks}
+    tasks={tasks.filter(t => t.my_day === true)}
     setTasks={setTasks}
     bgColor={'blue'}
     isVisisbleInputAdd={true}

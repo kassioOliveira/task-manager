@@ -71,7 +71,6 @@ export default function Home() {
 
   }, [navigate, user.token]);
 
-
   return (
     <>
     <Header/>

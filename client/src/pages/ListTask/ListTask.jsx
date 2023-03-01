@@ -74,7 +74,7 @@ const [checkedState, setCheckedState] = useState(
       }, [navigate, user.token])
     
     const listName = lists.filter(li => li._id === listaId).map(li => li.name)
-      
+     
   return (
    <>
    <Header/>
