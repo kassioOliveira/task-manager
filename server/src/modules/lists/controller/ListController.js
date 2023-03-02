@@ -6,10 +6,12 @@ const AddTaskToListService = require("../service/AddTaskToListService");
 const CreateListService = require("../service/CreateListService");
 const DeleteListService = require("../service/DeleteListService");
 const DeleteManyListService = require("../service/DeleteManyListService");
+const GetListByIdService = require("../service/GetListByIdService");
 const ListOfListService = require("../service/ListOfListService");
 const ListTaskOfListService = require("../service/ListTaskOfListService");
 const RemoveManyTaskFromListService = require("../service/RemoveManyTaskFromListService");
 const RemoveTaskFromListService = require("../service/RemoveTaskFromListService");
+const UpdateListService = require("../service/UpdateListService");
 
 class ListController {
 
@@ -51,6 +53,55 @@ class ListController {
         res.status(500).json({error:error.message});
     }
    }
+
+   async showById(req,res){
+    const {id} = req.params;
+    const user = req.user;
+
+    if(!id){
+        return res.status(400).json({error:"Id da lista inválido!"});
+    }
+
+    const getListByIdService = new GetListByIdService();
+    try {
+        const task = await getListByIdService.listById(id,user);
+
+        return res.status(200).json({response:task});
+    } catch (error) {
+        return res.status(500).json({error:error.message});
+    }
+   }
+
+   async update(req,res){
+    const user = req.user;
+    const {id} = req.params;
+    const data = req.body;
+    const updateListService = new UpdateListService();
+
+    if(!id){
+        return res.status(400).json({error:"Id necessário para essa requisição!"});
+    }
+
+    if(!data){
+        return res.status(400).json({error:"Você não declarou nenhum campo para ser atualizado!"});
+    }
+
+    try {
+
+        const listExists = await List.findOne({_id:id});
+
+        if(!listExists){
+            return res.status(404).json({error:"Essa Lista não existe!"});
+        }
+
+      const list =  await updateListService.updateList(id,user,data);
+
+        return res.status(200).json({response:list});
+    } catch (error) {
+        return res.status(500).json({error:error.message});
+    }
+}
+
 
    async addTask(req,res){
 
